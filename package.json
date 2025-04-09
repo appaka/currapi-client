@@ -1,0 +1,32 @@
+{
+  "name": "@appaka/currapi",
+  "version": "0.0.1",
+  "description": "Official client for currapi.com — historical currency exchange rates",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "currency",
+    "exchange",
+    "api",
+    "currapi",
+    "historical",
+    "forex"
+  ],
+  "author": "Javier Pérez <hi@javierperez.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "dotenv": "16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.14.0",
+    "prettier-eslint": "16.3.0",
+    "typescript": "5.8.3"
+  }
+}
