@@ -75,6 +75,36 @@ If `CURRAPI_VERBOSE_MODE=true` is set, logs rate limit info to the console.
 
 ---
 
+## 🔁 Convert currency between two currencies
+
+```ts
+import { convertCurrency } from '@appaka/currapi'
+
+const converted = await convertCurrency(100, 'USD', 'EUR', '2024-03-15')
+console.log(converted) // e.g. 92.34
+```
+
+### 🔍 `convertCurrency(amount, currency, target, date?)`
+
+Converts an amount from one currency to another using the exchange rate of a given date. If `date` is not provided, it defaults to today.
+
+#### Parameters:
+
+- `amount`: `number` — the amount to convert
+- `currency`: `string` — the source currency (e.g. `"USD"`)
+- `target`: `string` — the target currency (e.g. `"EUR"`)
+- `date?`: `string` — optional, format `YYYY-MM-DD`
+
+#### Returns:
+
+- A `number` representing the converted amount
+
+#### Throws:
+
+- An error if the request fails or rate is not available
+
+---
+
 ## 💱 Get list of supported currencies
 
 ```ts

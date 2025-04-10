@@ -39,6 +39,21 @@ export async function getValidCurrencies(): Promise<string[]> {
   return currencies
 }
 
+export async function convertCurrency(
+  amount: number,
+  currency: string,
+  target: string,
+  date?: string,
+): Promise<number> {
+  const rate = await getExchangeRate({
+    date: date || new Date().toISOString().split('T')[0],
+    base: currency,
+    target,
+  })
+
+  return amount * rate
+}
+
 export async function getExchangeRate(
   params: ExchangeRateParams,
 ): Promise<number> {
