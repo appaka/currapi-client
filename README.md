@@ -18,127 +18,86 @@ yarn add @appaka/currapi
 
 ## 🚀 Usage
 
-This client provides access to historical exchange rate data from [currapi.com](https://currapi.com), using a simple and developer-friendly interface.
+This client provides a modern and extensible way to interact with [currapi.com](https://currapi.com), including automatic caching and validation.
 
 ### 🔐 Set your API key
 
-Make sure you have a `.env` file or an environment variable defined:
+We recommend using environment variables to store your API key:
 
 ```env
 CURRAPI_API_KEY=your_api_key_here
 ```
 
-Optional:
-
-```env
-CURRAPI_VERBOSE_MODE=1
-```
-
-This enables logging of rate limit data to the console.
+[Get your API key](https://currapi.com/pricing).
 
 ---
 
-## 📅 Get a historical exchange rate
+## `CurrAPIClient` class
 
 ```ts
-import { getExchangeRate } from '@appaka/currapi'
+import { CurrAPIClient } from '@appaka/currapi'
 
-const rate = await getExchangeRate({
-  date: '2024-03-15',
-  base: 'USD',
-  target: 'EUR',
+const client = new CurrAPIClient(process.env.CURRAPI_API_KEY!)
+
+const rate = await client.getRate('USD', 'EUR', '2024-03-15')
+
+const amount = await client.convert(100, 'USD', 'EUR', '2024-03-15')
+```
+
+### 🧰 With optional cache support
+
+```ts
+import Redis from 'ioredis'
+import { CurrAPIClient } from '@appaka/currapi'
+
+const redis = new Redis(process.env.REDIS_URL!)
+
+const client = new CurrAPIClient(process.env.CURRAPI_API_KEY!, {
+  verboseMode: true,
+  cacheGet: (base, target, date) => redis.get(`${date}:${base}${target}`),
+  cacheSet: (base, target, date, rate) =>
+    redis.set(`${date}:${base}${target}`, rate),
 })
-
-console.log(rate) // e.g. 0.9234
 ```
-
-### 🔍 `getExchangeRate(params)`
-
-Returns the exchange rate between a base currency and a target currency on a specific date.
-
-#### Parameters:
-
-- `date`: `string` — in `YYYY-MM-DD` format
-- `base`: `string` — ISO 4217 code of the base currency (e.g. `"USD"`)
-- `target`: `string` — ISO 4217 code of the target currency (e.g. `"EUR"`)
-
-#### Returns:
-
-- A `number` representing the exchange rate from base to target on the given date.
-
-#### Throws:
-
-- An error if the API key is missing or invalid
-- An error if the request fails or data is unavailable
-
-If `CURRAPI_VERBOSE_MODE=true` is set, logs rate limit info to the console.
 
 ---
 
-## 🔁 Convert currency between two currencies
+## 🔁 API Reference
+
+### `getRate(base, target, date?)`
+
+Fetches the exchange rate for a given date. Defaults to today if not provided.
+
+### `convert(amount, base, target, date?)`
+
+Converts an amount from one currency to another using the rate for a given date.
+
+---
+
+## 💱 Supported Currencies
+
+You can access the full list via:
 
 ```ts
-import { convertCurrency } from '@appaka/currapi'
+import { CURRENCIES } from '@appaka/currapi'
 
-const converted = await convertCurrency(100, 'USD', 'EUR', '2024-03-15')
-console.log(converted) // e.g. 92.34
+console.log(CURRENCIES)
+// ['EUR', 'USD', 'JPY', 'GBP', 'CHF', ...]
 ```
-
-### 🔍 `convertCurrency(amount, currency, target, date?)`
-
-Converts an amount from one currency to another using the exchange rate of a given date. If `date` is not provided, it defaults to today.
-
-#### Parameters:
-
-- `amount`: `number` — the amount to convert
-- `currency`: `string` — the source currency (e.g. `"USD"`)
-- `target`: `string` — the target currency (e.g. `"EUR"`)
-- `date?`: `string` — optional, format `YYYY-MM-DD`
-
-#### Returns:
-
-- A `number` representing the converted amount
-
-#### Throws:
-
-- An error if the request fails or rate is not available
 
 ---
 
-## 💱 Get list of supported currencies
+## 🧪 TypeScript Support
+
+All methods are fully typed. You can also use:
 
 ```ts
-import { getValidCurrencies } from '@appaka/currapi'
-
-const currencies = await getValidCurrencies()
-console.log(currencies)
-// ['USD', 'EUR', 'GBP', ...]
+import type { Currency } from '@appaka/currapi'
 ```
-
----
-
-## 🛠️ Features
-
-- ✅ Simple, modern API client
-- 🔐 Uses Bearer token authentication via environment variable
-- 📅 Date-based historical exchange rates
-- 🌍 Supports any valid currency pair
-- 📈 Optional rate limit info logging
-- 🧪 Fully typed with TypeScript
-
----
-
-## 🧰 Tech
-
-Built with:
-
-- TypeScript
-- Node.js (ES2020+)
-- [currapi.com](https://currapi.com) — built by indie makers, for indie makers
 
 ---
 
 ## 🧑‍💻 Author
 
-Developed by [@javierperez_com](https://x.com/javierperez_com) — indie SaaS builder  
-Check out the API: https://currapi.com
+- Developed by [javierperez.com](https://javierperez.com) | [@javierperez_com](https://x.com/javierperez_com)
+- Powered by [currapi.com](https://currapi.com) | [@CurrAPI_com](https://x.com/CurrAPI_com)

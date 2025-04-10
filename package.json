@@ -1,6 +1,6 @@
 {
   "name": "@appaka/currapi",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Official client for currapi.com — historical currency exchange rates",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
