@@ -126,6 +126,7 @@ export const CURRENCIES = [
   'THB',
   'ZAR',
   'XAU',
+  'XAG',
 ] as const
 
 export type Currency = (typeof CURRENCIES)[number]
